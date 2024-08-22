@@ -1,0 +1,1104 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Swagger Gerenciamento de Hospedagem",
+        "description": "Documentação do Gerenciamento de Hospedagem",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "email": "luizcsdev@gmail.com"
+        },
+        "license": {
+            "name": "MIT",
+            "url": "https://opensource.org/licenses/MIT"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "OpenApi host"
+        }
+    ],
+    "paths": {
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Realiza a autenticação do usuário",
+                "description": "Autentica um usuário com base em suas credenciais de email e senha e retorna um token JWT.",
+                "operationId": "a3b306d14572d1f4bd6c064b3233e7b8",
+                "requestBody": {
+                    "description": "Dados de login necessários para autenticação",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "description": "O email registrado do usuário",
+                                        "type": "string",
+                                        "example": "luizcsdev@gmail.com"
+                                    },
+                                    "password": {
+                                        "description": "A senha correspondente ao email do usuário",
+                                        "type": "string",
+                                        "example": "luiz1979"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Usuário autenticado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "description": "JWT gerado após a autenticação",
+                                            "type": "string",
+                                            "example": "jwt_token_aqui"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Usuário ou senha inválido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "erro": {
+                                            "description": "Mensagem de erro indicando que as credenciais são inválidas",
+                                            "type": "string",
+                                            "example": "Usuário ou senha inválido!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/dailies": {
+            "get": {
+                "tags": [
+                    "Diária"
+                ],
+                "summary": "Listar os preços da diárias",
+                "operationId": "cf97b558e9baf7568c2d33401f5354a8",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token JWT gerado durante a autenticação. Deve ser enviado no formato: Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer jwt_token_aqui"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Exibe uma lista paginada dos preços da diárias, com a possibilidade de carregar atributos relacionados e aplicar filtros."
+                    },
+                    "401": {
+                        "description": "Token ausente ou inválido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "erro": {
+                                            "type": "string",
+                                            "example": "Token inválido ou ausente."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Missing Data"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Diária"
+                ],
+                "summary": "Criar preço da diária",
+                "operationId": "3a3bbbca93f09b1d8943381731bb38f1",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token JWT gerado durante a autenticação. Deve ser enviado no formato: Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer jwt_token_aqui"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Dados para criação de um preço da diária",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "price",
+                                    "type_of_room_id"
+                                ],
+                                "properties": {
+                                    "price": {
+                                        "description": "O preço da diária",
+                                        "type": "number",
+                                        "example": "55.25"
+                                    },
+                                    "type_of_room_id": {
+                                        "description": "Id do tipo do quarto",
+                                        "type": "number",
+                                        "example": "15"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tipos de quarto criado com sucesso."
+                    },
+                    "401": {
+                        "description": "Token ausente ou inválido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "erro": {
+                                            "type": "string",
+                                            "example": "Token inválido ou ausente."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Missing Data"
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro ao tentar recuperar os tipos de quarto.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "erro": {
+                                            "type": "string",
+                                            "example": "Ocorreu um erro ao tentar recuperar os tipos de quarto.."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/dailies/{id}": {
+            "get": {
+                "tags": [
+                    "Diária"
+                ],
+                "summary": "Obter o preço da diária pelo ID",
+                "operationId": "f371ab6e708c1a4f2d4fbf86d55d3113",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do preço da diária ser recuperado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token JWT gerado durante a autenticação. Deve ser enviado no formato: Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer jwt_token_aqui"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorna o preço da diária especificado, incluindo os relacionamentos com quartos.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "price": {
+                                            "type": "number",
+                                            "example": "55.25"
+                                        },
+                                        "type_of_room_id": {
+                                            "type": "integer",
+                                            "example": "15"
+                                        },
+                                        "rooms": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Preço da diária não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Recurso pesquisado não existe!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token ausente ou inválido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "erro": {
+                                            "type": "string",
+                                            "example": "Token inválido ou ausente."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Diária"
+                ],
+                "summary": "Atualizar o preço da diária",
+                "operationId": "f6fc7f41a64a5c24eaf42c916a32ff4a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do preço da diária a ser atualizado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token JWT gerado durante a autenticação. Deve ser enviado no formato: Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer jwt_token_aqui"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "price",
+                                    "type_of_room_id"
+                                ],
+                                "properties": {
+                                    "price": {
+                                        "description": "O preço da diária",
+                                        "type": "number",
+                                        "example": "55.25"
+                                    },
+                                    "type_of_room_id": {
+                                        "description": "Id do tipo do quarto",
+                                        "type": "number",
+                                        "example": "15"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Preço da diária atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "Preço da diária atualizado com sucesso!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Preço da diária não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Preço da diária não encontrado."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao atualizar o preço da diária",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Erro ao atualizar o preço da diária."
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Detalhes do erro..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Diária"
+                ],
+                "summary": "Excluir o preço da diária",
+                "operationId": "df9b419d9c5c6042686e23427b7cb511",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do preço da diária ser excluído",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token JWT gerado durante a autenticação. Deve ser enviado no formato: Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer jwt_token_aqui"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Preço da diáriaremovido com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "O registro foi removido com sucesso!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro ao remover o preço da diária devido a relacionamentos existentes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Impossível excluir. Existem relacionamentos associados a este preço da diária."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Preço da diária não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Impossível realizar a exclusão. O recurso não foi encontrado."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao remover o preço da diária",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Falha ao remover o preço da diária. Por favor, tente novamente."
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Detalhes do erro..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/type-rooms": {
+            "get": {
+                "tags": [
+                    "Tipo de Quarto"
+                ],
+                "summary": "Listar Tipos de Quarto",
+                "operationId": "75e93c04f5b6ac9e3d49b0d4bdc07e7c",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token JWT gerado durante a autenticação. Deve ser enviado no formato: Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer jwt_token_aqui"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Exibe uma lista paginada de Tipos de Quarto, com a possibilidade de carregar atributos relacionados e aplicar filtros."
+                    },
+                    "401": {
+                        "description": "Token ausente ou inválido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "erro": {
+                                            "type": "string",
+                                            "example": "Token inválido ou ausente."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Missing Data"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Tipo de Quarto"
+                ],
+                "summary": "Criar um tipo de quarto",
+                "operationId": "b58057876eb3b5343a6d9d1057d4f834",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token JWT gerado durante a autenticação. Deve ser enviado no formato: Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer jwt_token_aqui"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Dados para criação de um tipo de quarto",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "description": "O nome do tipo de quarto",
+                                        "type": "string",
+                                        "example": "Standarth"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Tipos de quarto criado com sucesso."
+                    },
+                    "401": {
+                        "description": "Token ausente ou inválido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "erro": {
+                                            "type": "string",
+                                            "example": "Token inválido ou ausente."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Missing Data"
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro ao tentar recuperar os tipos de quarto.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "erro": {
+                                            "type": "string",
+                                            "example": "Ocorreu um erro ao tentar recuperar os tipos de quarto.."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/all-type-rooms": {
+            "get": {
+                "tags": [
+                    "Tipo de Quarto"
+                ],
+                "summary": "Listar toods os tipos de quarto sem paginação",
+                "operationId": "f2d14939c6390b1786a5c90eb033bc3e",
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token JWT gerado durante a autenticação. Deve ser enviado no formato: Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer jwt_token_aqui"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Exibe uma lista com todos os tipos de quarto sem paginação."
+                    },
+                    "401": {
+                        "description": "Token ausente ou inválido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "erro": {
+                                            "type": "string",
+                                            "example": "Token inválido ou ausente."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Nenhum tipo de quarto encontrado.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "erro": {
+                                            "type": "string",
+                                            "example": "Nenhum tipo de quarto encontrado."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Missing Data"
+                    },
+                    "500": {
+                        "description": "Ocorreu um erro ao tentar recuperar os tipos de quarto.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "erro": {
+                                            "type": "string",
+                                            "example": "Ocorreu um erro ao tentar recuperar os tipos de quarto.."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/type-rooms/{id}": {
+            "get": {
+                "tags": [
+                    "Tipo de Quarto"
+                ],
+                "summary": "Obter um Tipo de Quarto pelo ID",
+                "operationId": "c3c7393108e178f2be96c4532a80b5c8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do Tipo de Quarto a ser recuperado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token JWT gerado durante a autenticação. Deve ser enviado no formato: Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer jwt_token_aqui"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Retorna o Tipo de Quarto especificado, incluindo os relacionamentos com quartos e diárias.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": 1
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Quarto Deluxe"
+                                        },
+                                        "rooms": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        },
+                                        "dailies": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Tipo de Quarto não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Recurso pesquisado não existe!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token ausente ou inválido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "erro": {
+                                            "type": "string",
+                                            "example": "Token inválido ou ausente."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Tipo de Quarto"
+                ],
+                "summary": "Atualizar Tipo de Quarto",
+                "operationId": "3a06ffbe4c194244d5aaa42c596fcb7f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do Tipo de Quarto a ser atualizado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token JWT gerado durante a autenticação. Deve ser enviado no formato: Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer jwt_token_aqui"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Quarto Deluxe"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Tipo de Quarto atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "Tipo de Quarto atualizado com sucesso!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Tipo de Quarto não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Tipo de Quarto não encontrado."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao atualizar o Tipo de Quarto",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Erro ao atualizar o Tipo de Quarto."
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Detalhes do erro..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Tipo de Quarto"
+                ],
+                "summary": "Excluir Tipo de Quarto",
+                "operationId": "c2692e73adfb3382645c893d0fa707d7",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do Tipo de Quarto a ser excluído",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "example": 1
+                        }
+                    },
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token JWT gerado durante a autenticação. Deve ser enviado no formato: Bearer {token}",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "Bearer jwt_token_aqui"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Tipo de Quarto removido com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "success": {
+                                            "type": "string",
+                                            "example": "O registro foi removido com sucesso!"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro ao remover o Tipo de Quarto devido a relacionamentos existentes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Impossível excluir. Existem relacionamentos associados a este Tipo de Quarto."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Tipo de Quarto não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Impossível realizar a exclusão. O recurso não foi encontrado."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Erro ao remover o Tipo de Quarto",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Falha ao remover o Tipo de Quarto. Por favor, tente novamente."
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Detalhes do erro..."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Autenticação",
+            "description": "Autenticação"
+        },
+        {
+            "name": "Diária",
+            "description": "Diária"
+        },
+        {
+            "name": "Tipo de Quarto",
+            "description": "Tipo de Quarto"
+        }
+    ],
+    "externalDocs": {
+        "description": "Find out more about Swagger",
+        "url": "http://swagger.io"
+    }
+}
